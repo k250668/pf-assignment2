@@ -57,17 +57,16 @@ int main() {
         printf("3. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
-        getchar();
         switch (choice) {
             case 1:
                 printf("Enter the message: ");
-                fgets(message, sizeof(message), stdin);
+               scanf(" %[^\n]", message);
                 encodeMessage(message);
                 break;
 
             case 2:
                 printf("Enter the message: ");
-                fgets(message, sizeof(message), stdin);
+                scanf(" %[^\n]", message);
              
                 decode(message);
                 break;
