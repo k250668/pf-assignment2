@@ -1,8 +1,5 @@
 #include <stdio.h>
 
-int cartCodes[20];
-int cartQty[20];
-int cartCount = 0;
 
 void information(char name[100], char cnic[20]) {
     printf("Enter your name: ");
@@ -18,7 +15,7 @@ void display(int productcode[4], float price[4], int quantity[4]) {
 }
 }
 
-int add(float price[], int quantity[], int productcode[4], int totalBill) {
+int add(float price[], int quantity[], int productcode[4], int totalbill) {
     int code;
     int qty, found = 0;
     char more = 'y';
@@ -38,12 +35,8 @@ int add(float price[], int quantity[], int productcode[4], int totalBill) {
                 if (quantity[i] >= qty) {
                     quantity[i] -= qty;
 
-                    cartCodes[cartCount] = code;
-                    cartQty[cartCount] = qty;
-                    cartCount++;
-
                     int itemCost = qty * price[i];
-                    totalBill += itemCost;
+                    totalbill += itemCost;
 
                     printf(" Added! Cost: %d\n", itemCost);
                 } else {
@@ -58,38 +51,42 @@ int add(float price[], int quantity[], int productcode[4], int totalBill) {
         printf("Add more items? (y/n): ");
         scanf(" %c", &more);
     }
-    return totalBill;
+    return totalbill;
 }
 
-void displayCart(float price[], int productcode[4], int totalBill) {
-    printf("\nCART ITEMS:\n");
-    printf("Code\tQty\tPrice\n");
-    for (int i = 0; i < cartCount; i++) {
-        printf("%03d\t%d\t", cartCodes[i], cartQty[i]);
-        for (int j = 0; j < 4; j++) {
-            if (cartCodes[i] == productcode[j]) {
-                printf("%.2f\n", price[j]);
-                break;
-            }
-        }
-    }
+void displayCart(float price[],int discount, int productcode[4], int totalbill) {
+   
+        
 int ans;
-    printf("-------------------------\n");
-    printf("Total without discount: %d\n", totalBill);
-    printf("Do you have a code?");
+
+    printf("Total without discount: %d\n", totalbill);
+    printf("Do you have a discount code (EID2025)?");
     scanf(" %c", &ans);
+    discount = totalbill;
     if(ans == 'y' || ans == 'Y') {
-    	
+    	discount = discount *0.25;
+	}
+}
+void invoice( int discount , int totalbill,char name[100], char cnic[20]) {
+	printf("NAME: %s", name);
+	printf("CNIC : %s", cnic);
+	if (discount < totalbill) {
+		printf("Discounted bill: %d \n", discount);
+		printf("Total bill without discount: %d\n", totalbill);
+	}
+	else {
+		printf("Totalbill: %d", totalbill);
 	}
 }
 
 int main() {
+	int discount;
     int quantity[4] = {50, 10, 20, 8};
     int productcode[4] = {001,002,003,004};
     float price[4] = {100, 200, 300, 150};
 
     char name[100], cnic[20];
-    int totalBill = 0;
+    int totalbill = 0;
     int choice = 0;
 int totalprice;
     while (choice != 6) {
@@ -98,7 +95,7 @@ int totalprice;
         printf("2. Display Inventory\n");
         printf("3. Add Item to Cart\n");
         printf("4. Display Cart\n");
-        printf("5. Show Invoice (Total Bill)\n");
+        printf("5. Show Invoice (Total bill)\n");
         printf("6. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
@@ -113,15 +110,15 @@ int totalprice;
                 break;
 
             case 3:
-                totalBill = add(price, quantity, productcode, totalBill);
+                totalbill=add(price, quantity, productcode, totalbill);
                 break;
 
             case 4:
-                displayCart(price, productcode,totalBill);
+                displayCart(price, discount,  productcode,  totalbill);
                 break;
 
             case 5:
-                printf("\nTotal Bill = %d\n", totalBill);
+            invoice(discount,totalbill,name,cnic);
                 break;
 
             case 6:
@@ -134,4 +131,3 @@ int totalprice;
     }
     return 0;
 }
-
